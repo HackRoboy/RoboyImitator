@@ -41,3 +41,14 @@ EMOTIONS = {
     "sadness": "Susan",
     "disgust": "Sean"
 }
+
+ROBOY_EMOTIONS = {
+    'anger': 'angry',
+    'happiness': 'smile',
+    'neutral': 'sweat',
+    'sadness': 'speak',
+    'surprise': 'blink',
+    'fear': 'kiss',
+    'contempt': 'blush',
+    'disgust': 'blush',
+}

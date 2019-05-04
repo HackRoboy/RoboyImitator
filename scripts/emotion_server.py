@@ -1,27 +1,20 @@
-#!/usr/bin/env python
+from roboy_imitator.face import mimic_emotions
+from roboy_imitator.communication.emotions import send_emotion
+from functools import partial
 import socket
 
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serversocket.bind(('localhost', 10003))
-serversocket.listen(1)
-print("Emotion Server Started")
+host = "192.168.64.1"
+port = 10001
 
-conn, addr = serversocket.accept()
-print('Connected by', addr)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = (host, port)
+sock.connect(server_address)
+print('connected to', server_address)
 
-while True:
+send_emotion_callback = partial(send_emotion, sock)
 
-    try:
-        emotion = conn.recv(1024)
+# This method blocks
+mimic_emotions(send_emotion_callback)
 
-        if not emotion:
-            break
+sock.close()
 
-        print("Emotion: ", emotion)
-        
-    except socket.error:
-        print("Error Occured.")
-        break
-
-conn.close()
-serversocket.close()

@@ -9,7 +9,8 @@ import binascii
 from PIL import Image
 from io import StringIO, BytesIO
 from concurrent.futures import ThreadPoolExecutor
-from roboy_imitator.common import CONFIGS
+from roboy_imitator.common import CONFIGS, ROBOY_EMOTIONS
+from typing import Optional, Callable
 
 try:
     import pyroboy
@@ -18,16 +19,6 @@ except:
     pyroboy_flag = False
 
 FACE_KEY = CONFIGS["face_key"]
-ROBOY_EMOTIONS = {
-    'anger': 'angry',
-    'happiness': 'smile',
-    'neutral': 'sweat',
-    'sadness': 'speak',
-    'surprise': 'blink',
-    'fear': 'kiss',
-    'contempt': 'blush',
-    'disgust': 'blush',
-}
 
 
 class FaceRecognition(object):
@@ -68,26 +59,8 @@ class FaceRecognition(object):
     def detect_gender(self):
         return self.face[0]['faceAttributes']['gender']
 
-    def sending_emotion(self, host, port, emotion):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_address = (host, port)
-        sock.connect(server_address)
-        print('connected to', server_address)
 
-        values = list(ROBOY_EMOTIONS.values()).index(emotion)
-        packer = struct.Struct('I')
-        packed_data = packer.pack(values)
-
-        try:
-            print('sending "%s"' % binascii.hexlify(
-                packed_data), values, file=sys.stderr)
-            sock.sendall(packed_data)
-        finally:
-            print('closing socket', file=sys.stderr)
-            sock.close()
-
-
-def mimic_emotions():
+def mimic_emotions(send_callback: Optional[Callable[[int], None]]):
     fr = FaceRecognition(FACE_KEY)
     cap = cv2.VideoCapture(0)
     counter = 0
@@ -114,7 +87,8 @@ def mimic_emotions():
             y2 = y1 + int(face["faceRectangle"]["height"])
             logging.info(fr.detect_emotions(face))
             emotion = fr.top_emotion(face)
-            fr.sending_emotion('localhost', 10003, emotion)
+            if send_callback is not None:
+                send_callback(emotion)
             logging.info('Top Emotion: ', emotion)
             try:
                 if pyroboy_flag:

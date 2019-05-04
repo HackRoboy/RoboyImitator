@@ -4,6 +4,10 @@ import pyaudio
 import socket
 import select
 
+
+HOST = "192.168.64.1"
+PORT = 10002
+
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
@@ -12,7 +16,7 @@ CHUNK = 4096
 audio = pyaudio.PyAudio()
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serversocket.bind(('', 10002))
+serversocket.bind((HOST, PORT))
 serversocket.listen(5)
 
 

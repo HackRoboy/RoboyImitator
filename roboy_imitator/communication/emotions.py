@@ -1,3 +1,5 @@
+from roboy_imitator.common.configs import ROBOY_EMOTIONS
+
 import socket
 import struct
 import logging
@@ -18,8 +20,19 @@ def receive_emotions(host="localhost", port=10000):
         try:
             data = connection.recv(unpacker.size)
             logging.debug(f"Received {data}")
-            emotion = unpacker.unpack(data)
-            yield emotion
+            emotion_ind, = unpacker.unpack(data)
+            yield ROBOY_EMOTIONS[list(sorted(ROBOY_EMOTIONS.keys()))[emotion_ind]]
 
         finally:
             connection.close()
+
+
+def send_emotion(socket, emotion):
+    values = list(sorted(ROBOY_EMOTIONS.values())).index(emotion)
+    packer = struct.Struct('I')
+    packed_data = packer.pack(values)
+
+    try:
+        socket.sendall(packed_data)
+    except Exception as e:
+        logging.warning(e)
