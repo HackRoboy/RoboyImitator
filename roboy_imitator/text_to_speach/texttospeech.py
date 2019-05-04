@@ -24,7 +24,7 @@ subscription_key = "Your-Key-Goes-Here"
 #    print('Environment variable for your subscription key is not set.')
 #    exit()
 # hardcode subscription key
-# subscription_key = ""
+subscription_key = ""
 # config subscription key
 
 voice_dict = {
@@ -52,10 +52,10 @@ voice_dict = {
 }
 
 class TextToSpeech(object):
-    def __init__(self, subscription_key, tts_string):
+    def __init__(self, subscription_key):
         self.subscription_key = subscription_key
         # self.tts = input("What would you like to convert to speech: ")  # input via __init__ call (tts_string
-        self.tts = tts_string
+        #self.tts = tts_string
         self.timestr = time.strftime("%Y%m%d-%H%M")
         self.access_token = None
 
@@ -71,7 +71,7 @@ class TextToSpeech(object):
         response = requests.post(fetch_token_url, headers=headers)
         self.access_token = str(response.text)
 
-    def save_audio(self, voice):
+    def save_audio(self, text_string, voice):
         base_url = 'https://westus.tts.speech.microsoft.com/'
         path = 'cognitiveservices/v1'
         voice_name = 'Microsoft Server Speech Text to Speech Voice ' + voice
@@ -88,7 +88,7 @@ class TextToSpeech(object):
         voice.set('{http://www.w3.org/XML/1998/namespace}lang', 'de-DE')
         # change Jessa to guy for male voice
         voice.set('name', voice_name)
-        voice.text = self.tts
+        voice.text = text_string
         body = ElementTree.tostring(xml_body)
 
         response = requests.post(constructed_url, headers=headers, data=body)
@@ -104,12 +104,13 @@ class TextToSpeech(object):
         else:
             print("\nStatus code: " + str(response.status_code) + "\nSomething went wrong. Check your subscription key and headers.\n")
 
+
 def tts_test(subscription_key, teststring, voice_name = "Guy"):
     voice = voice_dict[voice_name]
-    app = TextToSpeech(subscription_key, teststring)
+    app = TextToSpeech(subscription_key)
     app.get_token()
-    app.save_audio(voice=voice)
+    app.save_audio(text_string=teststring, voice=voice)
 
 
 if __name__ == "__main__":
-    tts_test(subscription_key, "Das ist österreichisch", voice_name="Karsten")
+    tts_test(subscription_key, "Das ist österreichisch", voice_name="Hedda")
