@@ -4,7 +4,7 @@ from roboy_cognition_msgs.msg import RecognizedSpeech
 from roboy_cognition_msgs.srv import RecognizeSpeech
 import speech_recognition as sr
 import threading
-from .recognizer import *
+from roboy_imitator.speech_to_text.recognizer import *
 from time import sleep
 
 
@@ -16,7 +16,7 @@ def callback(request, response):
     # except:
     #     msg.source = -1
     try:
-        text = bing.stt_with_vad(src)
+        text = bing.recognize(src)
         response.text = text
         # msg.text = text
         # publisher.publish(msg)
