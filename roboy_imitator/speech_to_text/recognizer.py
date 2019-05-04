@@ -43,11 +43,12 @@ class SpeechToText:
             recognized = True
             recognized_text = evt.result.text
 
-
         speech_recognizer.recognized.connect(recognized_handler)
         speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
         speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
         speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+
+        return "test"
 
         speech_recognizer.start_continuous_recognition()
 
