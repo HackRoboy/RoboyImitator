@@ -22,6 +22,7 @@ def callback(request, response):
 
     return response
 
+
 def listener(source, node):
     global bing, src, publisher
     publisher = node.create_publisher(RecognizedSpeech,'/roboy/cognition/speech/recognition')
