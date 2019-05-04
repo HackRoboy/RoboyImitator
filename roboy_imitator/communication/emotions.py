@@ -11,20 +11,20 @@ def receive_emotions(host="localhost", port=10000):
     server_address = (host, port)
     sock.bind(server_address)
     sock.listen(1)
-
+    
+    connection, client_address = sock.accept()
     unpacker = struct.Struct("I")
-
-    while True:
-        logging.info("Waiting for a connection")
-        connection, client_address = sock.accept()
-        try:
+    logging.info("Waiting for a connection")
+    
+    try:
+        while True:
             data = connection.recv(unpacker.size)
             logging.debug(f"Received {data}")
             emotion_ind, = unpacker.unpack(data)
             yield ROBOY_EMOTIONS[list(sorted(ROBOY_EMOTIONS.keys()))[emotion_ind]]
 
-        finally:
-            connection.close()
+    finally:
+        connection.close()
 
 
 def send_emotion(socket, emotion):

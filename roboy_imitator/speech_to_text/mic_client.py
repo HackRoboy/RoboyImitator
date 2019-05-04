@@ -54,7 +54,9 @@ class MicrophoneClient:
         def read(self, n=-1):
             # print("read %i"%n)
             while len(self.buffer) < n:
+               
                 pass
+            #print("got enough data")
             # self.lock.acquire()
 
             chunk = self.buffer[:n]

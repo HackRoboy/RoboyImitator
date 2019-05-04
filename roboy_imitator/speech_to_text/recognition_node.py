@@ -34,11 +34,12 @@ def listener(source, node):
 
         # with source as source:
         while rclpy.ok():
+            #sleep(1)
             rclpy.spin_once(node)
 
-        node.destroy_service(srv)
-        node.destroy_publisher(publisher)
-        rclpy.shutdown()
+        #node.destroy_service(srv)
+        #node.destroy_publisher(publisher)
+        #rclpy.shutdown()
 
 
 def odas_recognition(node):
@@ -78,7 +79,7 @@ def main():
     rclpy.init()
     node = rclpy.create_node('odas_speech_recognition')
     #mic_recognition(node)
-    client_recognition(node, "192.168.64.1", 10002) # requires RPi running odas
+    client_recognition(node, "192.168.0.215", 10004) # requires RPi running odas
     #odas_recognition(node)
 
 
