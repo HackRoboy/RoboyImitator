@@ -1,6 +1,7 @@
 from roboy_imitator.common import CONFIGS, VOICES, EMOTIONS
 from xml.etree import ElementTree
 
+import os
 import requests
 import time
 import logging
@@ -43,21 +44,27 @@ class TextToSpeech:
 
         response = requests.post(constructed_url, headers=headers, data=body)
         logging.debug(f"Status code: {response.status_code}")
+        file_name = 'test.wav'  # placeholder
+        file_path = os.path.abspath(file_name)
 
         if response.status_code == 200:
-            with open(f'sample-{self.timestr}.wav', 'wb') as audio:
+            with open(file_path, 'wb') as audio:
                 audio.write(response.content)
+                file_path = os.path.realpath(audio.name)
                 logging.debug("Your TTS is ready for playback.")
         else:
             logging.warning("Something went wrong. Check your subscription key and headers.")
+
+        return file_path
 
 
 def tts_test(subscription_key, teststring, emotion="neutral"):
     voice = VOICES[EMOTIONS[emotion]]
     app = TextToSpeech(subscription_key)
     app.get_token()
-    app.save_audio(text_string=teststring, voice=voice)
+    file_path = app.save_audio(text_string=teststring, voice=voice)
+    return file_path
 
 
 if __name__ == "__main__":
-    tts_test(CONFIGS["tts_key"], "This is a long sentence. I can show emotions.", emotion="happiness")
+    print(tts_test(CONFIGS["tts_key"], "This is a long sentence. I can show emotions.", emotion="happiness"))
