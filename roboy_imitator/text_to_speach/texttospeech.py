@@ -23,8 +23,9 @@ subscription_key = "Your-Key-Goes-Here"
 #else:
 #    print('Environment variable for your subscription key is not set.')
 #    exit()
-# hardcode
-subscription_key = "7d6013e4dabd4877963dbbd830c183b8"
+# hardcode subscription key
+# subscription_key = ""
+# config subscription key
 
 voice_dict = {
     "Michael": "(de-AT, Micheal)",
