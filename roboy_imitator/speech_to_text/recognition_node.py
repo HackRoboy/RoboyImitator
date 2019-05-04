@@ -70,9 +70,7 @@ def client_recognition(node, host, port):
     listener(mic_client, node)
 
 
-def client_recognition_service(host, port):
-    rclpy.init()
-    node = rclpy.create_node('odas_speech_recognition')
+def client_recognition_service(node, host, port):
     client_recognition(node, host, port)
 
 

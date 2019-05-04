@@ -3,7 +3,7 @@ from roboy_imitator.communication.emotions import send_emotion
 from functools import partial
 import socket
 
-host = "192.168.64.1"
+host = "192.168.64.2"
 port = 10001
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

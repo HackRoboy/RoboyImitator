@@ -47,12 +47,9 @@ try:
                     read_list.remove(s)
 except KeyboardInterrupt:
     pass
-
-
-print("finished recording")
-
-serversocket.close()
-# stop Recording
-stream.stop_stream()
-stream.close()
-audio.terminate()
+finally:
+    serversocket.close()
+    # stop Recording
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()

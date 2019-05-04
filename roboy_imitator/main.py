@@ -15,7 +15,7 @@ import click
 def main(emotion_host, emotion_port, mic_host, mic_port):
     try:
         # Start the transcription service
-        process = Process(target=client_recognition_service, args=(mic_host, mic_port))
+        process = Process(target=client_recognition_service, args=(pyroboy.node, mic_host, mic_port))
         process.start()
 
         # Start the emotion receiving server
