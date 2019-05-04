@@ -7,7 +7,7 @@ import io
 import time
 from monotonic import monotonic
 
-class MicrophoneClient():
+class MicrophoneClient:
 
     class AudioSource(sr.AudioSource):
         def __init__(self, id, sample_rate, chunk_size=1024):
@@ -53,7 +53,7 @@ class MicrophoneClient():
         while True:
             data = self.s.recv(self.CHUNK)
             data = np.frombuffer(data, dtype=np.int16)
-            self.channel.stream.write(data.tobytes())
+            self.stream.write(data.tobytes())
 
     def __enter__(self):
         # assert self.stream is None, "This audio source is already inside a context manager"

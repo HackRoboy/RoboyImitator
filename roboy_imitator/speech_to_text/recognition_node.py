@@ -10,14 +10,10 @@ from time import sleep
 
 
 def callback(request, response):
-    global bing, src, publisher
-    msg = RecognizedSpeech()
-    msg.source = -1
+    global bing, src
     try:
         text = bing.recognize(src)
         response.text = text
-        msg.text = text
-        publisher.publish(msg)
         print("text: " + text)
     except sr.UnknownValueError:
         print("Microsoft Bing Voice Recognition could not understand audio")
@@ -27,9 +23,9 @@ def callback(request, response):
     return response
 
 def listener(source, node):
+    global bing, src, publisher
     publisher = node.create_publisher(RecognizedSpeech,\
                                 '/roboy/cognition/speech/recognition')
-    global bing, src
     src = source
     bing = SpeechToText()
     srv = node.create_service(RecognizeSpeech, \
