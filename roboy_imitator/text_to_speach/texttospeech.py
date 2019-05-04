@@ -5,10 +5,6 @@ directory with this command: python TTSSample.py
 import os, requests, time
 from xml.etree import ElementTree
 
-# This code is required for Python 2.7
-try: input = raw_input
-except NameError: pass
-
 '''
 If you prefer, you can hardcode your subscription key as a string and remove
 the provided conditional statement. However, we do recommend using environment

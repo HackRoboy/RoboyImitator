@@ -1,16 +1,7 @@
-from pathlib import Path
+from roboy_imitator.common import CONFIGS
 
 import azure.cognitiveservices.speech as speechsdk
-import time
-import wave
-import yaml
-import sys
 
-
-CONFIGS_PATH = Path("../../configs/secrets.yaml")
-
-with open(CONFIGS_PATH) as stream:
-    CONFIGS = yaml.load(stream)
 
 speech_key, service_region = CONFIGS["stt_key"], CONFIGS["service_region"]
 
@@ -66,6 +57,8 @@ def speech_recognition_with_push_stream():
                 break
 
             stream.write(frames)
+    except KeyboardInterrupt:
+        pass
     finally:
         mic_stream.stop_stream()
         speech_recognizer.stop_continuous_recognition()

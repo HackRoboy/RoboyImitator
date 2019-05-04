@@ -1,0 +1,10 @@
+azure-cognitiveservices-speech==1.5.0
+certifi==2019.3.9
+chardet==3.0.4
+idna==2.8
+Pillow==6.0.0
+PyAudio==0.2.11
+PyYAML==5.1
+requests==2.21.0
+-e git+git@github.com:yuriyarabskyy/RoboyImitator.git@e1a2058237cece52f382ea43d6ad569a91ea4f48#egg=roboy_imitator
+urllib3==1.24.3
