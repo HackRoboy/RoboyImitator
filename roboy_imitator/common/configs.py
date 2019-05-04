@@ -18,15 +18,26 @@ VOICES = {
     "Linda": "(en-CA, Linda)",
     "Heather": "(en-CA, HeatherRUS)",
     "Susan": "(en-GB, Susan, Apollo)",
-    "Hazel": "(en-GB, HazelRUS)",
+    "Hazel": "(en-GB, HazelRUS)",  # fear
     "George": "(en-GB, George, Apollo)",
     "Sean": "(en-IE, Sean)",
     "Heera": "(en-IN, Heera, Apollo)",
     "Priya": "(en-IN, PriyaRUS)",
     "Ravi": "(en-IN, Ravi, Apollo)",
-    "Zira": "(en-US, ZiraRUS)",
-    "Jessa": "(en-US, JessaRUS)",
-    "Benjamin": "(en-US, BenjaminRUS)",
-    "Jessa": "(en-US, Jessa24kRUS)",
-    "Guy": "(en-US, Guy24kRUS)"
+    "Zira": "(en-US, ZiraRUS)",  # neutral
+    "Jessa": "(en-US, JessaRUS)",  # contempt
+    "Benjamin": "(en-US, BenjaminRUS)", # happiness
+    "Jessa2": "(en-US, Jessa24kRUS)", # anger
+    "Guy": "(en-US, Guy24kRUS)" # surprise
+}
+
+EMOTIONS = {
+    "neutral": "Zira",
+    "contempt": "Jessa",
+    "happiness": "Benjamin",
+    "anger": "Jessa2",
+    "surprise": "Guy",
+    "fear": "Hazel",
+    "sadness": "Susan",
+    "disgust": "Sean"
 }
