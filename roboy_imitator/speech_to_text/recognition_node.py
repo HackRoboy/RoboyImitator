@@ -17,7 +17,7 @@ def callback(request, response):
     # except:
     #     msg.source = -1
     try:
-        text = bing.stt_with_vad(src)
+        text = bing.recognize(src)
         response.text = text
         # msg.text = text
         # publisher.publish(msg)
@@ -77,7 +77,7 @@ def main(args=None):
     rclpy.init()
     node = rclpy.create_node('odas_speech_recognition')
     #mic_recognition(node)
-    odas_single_channel(node) # requires RPi running odas
+    client_recognition(node) # requires RPi running odas
     #odas_recognition(node)
 
 if __name__ == '__main__':
