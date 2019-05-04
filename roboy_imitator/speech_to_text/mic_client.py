@@ -32,12 +32,10 @@ class MicrophoneClient:
     def write_to_streams(self):
         print("Started mic client deamon")
         while True:
+            data = self.s.recv(self.CHUNK)
             if self.record:
-                data = self.s.recv(self.CHUNK)
                 data = np.frombuffer(data, dtype=np.int16)
                 self.stream.write(data.tobytes())
-            else:
-                time.sleep(0.2)
 
     def __enter__(self):
         # assert self.stream is None, "This audio source is already inside a context manager"
