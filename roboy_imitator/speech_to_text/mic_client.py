@@ -39,7 +39,7 @@ class MicrophoneClient():
 
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((host, port))
-        print("Micrphone client connected")
+        print("Microphone client connected")
 
         d = threading.Thread(target=self.write_to_streams)
         self.lock = threading.RLock()
@@ -51,9 +51,10 @@ class MicrophoneClient():
     def write_to_streams(self):
         print("Started odas deamon")
         while True:
+
             data = self.s.recv(self.CHUNK)
             data = np.frombuffer(data, dtype=np.int16)
-            self.channel.stream.write(data.tobytes())
+            self.stream.write(data.tobytes())
 
     def __enter__(self):
         # assert self.stream is None, "This audio source is already inside a context manager"
