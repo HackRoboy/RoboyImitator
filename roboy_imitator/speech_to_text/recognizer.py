@@ -52,12 +52,13 @@ class SpeechToText:
         speech_recognizer.start_continuous_recognition()
 
         try:
-            while not recognized:
-                frames = mic_source.read(CHUNK)
-                if not frames:
-                    break
-                stream.write(frames)
-            return recognized_text
+            with mic_source:
+                while not recognized:
+                    frames = mic_source.read(CHUNK)
+                    if not frames:
+                        break
+                    stream.write(frames)
+                return recognized_text
         except KeyboardInterrupt:
             pass
         finally:

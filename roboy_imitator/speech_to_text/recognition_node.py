@@ -24,8 +24,7 @@ def callback(request, response):
 
 def listener(source, node):
     global bing, src, publisher
-    publisher = node.create_publisher(RecognizedSpeech,\
-                                '/roboy/cognition/speech/recognition')
+    publisher = node.create_publisher(RecognizedSpeech,'/roboy/cognition/speech/recognition')
     src = source
     bing = SpeechToText()
     srv = node.create_service(RecognizeSpeech, \
@@ -47,8 +46,7 @@ def odas_recognition(node):
 
     listeners = []
     for i in range(4):
-        listeners.append(threading.Thread(target=listener, \
-                                        args = (o.channels[i], node, )))
+        listeners.append(threading.Thread(target=listener, args = (o.channels[i], node, )))
     for l in listeners:
         l.start()
 
