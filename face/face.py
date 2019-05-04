@@ -41,6 +41,7 @@ class FaceRecognition(object):
 
 
 if __name__ == "__main__":
-    fr = FaceRecognition()
+    image_path = None
+    fr = FaceRecognition(SUBSCRIPTION_KEY, image_path)
     fr.detect_face()
     print(fr.detect_emotions())
