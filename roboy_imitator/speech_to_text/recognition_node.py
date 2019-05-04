@@ -25,7 +25,7 @@ def callback(request, response):
 
 def listener(source, node):
     global bing, src, publisher
-    publisher = node.create_publisher(RecognizedSpeech,'/roboy/cognition/speech/recognition')
+    publisher = node.create_publisher(RecognizedSpeech, '/roboy/cognition/speech/recognition')
     src = source
     bing = SpeechToText()
 
@@ -52,19 +52,23 @@ def odas_recognition(node):
     for l in listeners:
         l.start()
 
+
 def odas_single_channel(node):
     from ros2_speech_recognition.odas_sr_driver import Odas
     print("waiting for odas connection")
     o = Odas(host="192.168.64.1", port=10002, chunk_size=4096)
     listener(o.channels[0], node)
 
+
 def mic_recognition(node):
     mic = sr.Microphone()
     listener(mic, node)
 
+
 def client_recognition(node):
     mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
     listener(mic_client, node)
+
 
 def main(args=None):
     rclpy.init()
@@ -72,6 +76,7 @@ def main(args=None):
     #mic_recognition(node)
     client_recognition(node) # requires RPi running odas
     #odas_recognition(node)
+
 
 if __name__ == '__main__':
     main()

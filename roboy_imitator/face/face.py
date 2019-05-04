@@ -65,7 +65,7 @@ class FaceRecognition(object):
         return self.face[0]['faceAttributes']['gender']
 
 
-def main():
+def mimic_emotions():
     fr = FaceRecognition(FACE_KEY)
     cap = cv2.VideoCapture(0)
     counter = 0
@@ -121,4 +121,4 @@ def main():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    main()
+    mimic_emotions()

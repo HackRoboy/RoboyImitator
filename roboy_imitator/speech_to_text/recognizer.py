@@ -62,7 +62,6 @@ class SpeechToText:
         self.stream.close()
 
 
-
 if __name__ == "__main__":
     speech_to_text = SpeechToText(CONFIGS["stt_key"], CONFIGS["service_region"])
     mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
