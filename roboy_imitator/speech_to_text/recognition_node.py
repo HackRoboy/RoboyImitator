@@ -27,15 +27,17 @@ def listener(source, node):
     publisher = node.create_publisher(RecognizedSpeech,'/roboy/cognition/speech/recognition')
     src = source
     bing = SpeechToText()
-    srv = node.create_service(RecognizeSpeech, '/roboy/cognition/speech/recognition', callback)
 
-    # with source as source:
-    while rclpy.ok():
-        rclpy.spin_once(node)
+    with bing:
+        srv = node.create_service(RecognizeSpeech, '/roboy/cognition/speech/recognition', callback)
 
-    node.destroy_service(srv)
-    node.destroy_publisher(publisher)
-    rclpy.shutdown()
+        # with source as source:
+        while rclpy.ok():
+            rclpy.spin_once(node)
+
+        node.destroy_service(srv)
+        node.destroy_publisher(publisher)
+        rclpy.shutdown()
 
 
 def odas_recognition(node):

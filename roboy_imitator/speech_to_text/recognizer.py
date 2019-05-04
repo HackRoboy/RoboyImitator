@@ -15,57 +15,52 @@ class SpeechToText:
     def __init__(self, key=CONFIGS["stt_key"], region=CONFIGS["service_region"]):
         self.speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
 
-    def recognize(self, mic_source=None):
         # setup the audio stream
-        stream = speechsdk.audio.PushAudioInputStream()
-        audio_config = speechsdk.audio.AudioConfig(stream=stream)
-        local_mic = True if mic_source is None else False
+        self.stream = speechsdk.audio.PushAudioInputStream()
+        audio_config = speechsdk.audio.AudioConfig(stream=self.stream)
 
-        if mic_source is None:
-            audio = pyaudio.PyAudio()
-            # Claim the microphone
-            mic_source = audio.open(format=FORMAT,
-                                    channels=CHANNELS,
-                                    rate=RATE,
-                                    input=True)
+        self._reset()
 
         # instantiate the speech recognizer with push stream input
-        speech_recognizer = speechsdk.SpeechRecognizer(speech_config=self.speech_config, audio_config=audio_config)
-
-        recognized = False
-        recognized_text = ''
+        self.speech_recognizer = speechsdk.SpeechRecognizer(speech_config=self.speech_config, audio_config=audio_config)
 
         # Connect callbacks to the events fired by the speech recognizer
         #speech_recognizer.recognizing.connect(lambda evt: print('RECOGNIZING: {}'.format(evt)))
         def recognized_handler(evt):
-            nonlocal recognized
-            nonlocal recognized_text
             print('RECOGNIZED: {}'.format(evt.result.text))
-            recognized = True
-            recognized_text = evt.result.text
+            self.recognized = True
+            self.recognized_text = evt.result.text
 
-        speech_recognizer.recognized.connect(recognized_handler)
-        speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
-        speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
-        speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+        self.speech_recognizer.recognized.connect(recognized_handler)
+        self.speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
+        self.speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
+        self.speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+        self.speech_recognizer.start_continuous_recognition()
 
-        speech_recognizer.start_continuous_recognition()
-
+    def recognize(self, mic_source):
+        self._reset()
         try:
             with mic_source:
-                while not recognized:
+                while not self.recognized:
                     frames = mic_source.stream.read(CHUNK)
                     if not frames:
                         break
-                    stream.write(frames)
-                return recognized_text
+                    self.stream.write(frames)
+                return self.recognized_text
         except KeyboardInterrupt:
             pass
-        finally:
-            if local_mic:
-                mic_source.stop_stream()
-            speech_recognizer.stop_continuous_recognition()
-            stream.close()
+
+    def _reset(self):
+        self.recognized = False
+        self.recognized_text = ''
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.speech_recognizer.stop_continuous_recognition()
+        self.stream.close()
+
 
 
 if __name__ == "__main__":
