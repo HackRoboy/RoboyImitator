@@ -1,70 +1,73 @@
 from roboy_imitator.common import CONFIGS
 
 import azure.cognitiveservices.speech as speechsdk
+import pyaudio
+
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 16000
+CHUNK = 3200
 
 
-speech_key, service_region = CONFIGS["stt_key"], CONFIGS["service_region"]
+class SpeechToText:
 
+    def __init__(self, key=CONFIGS["stt_key"], region=CONFIGS["service_region"]):
+        self.speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
 
-def speech_recognition_with_push_stream():
-    """gives an example how to use a push audio stream to recognize speech from a custom audio
-    source"""
-    speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
+    def recognize(self, mic_source=None):
+        # setup the audio stream
+        stream = speechsdk.audio.PushAudioInputStream()
+        audio_config = speechsdk.audio.AudioConfig(stream=stream)
+        local_mic = True if mic_source is None else False
 
-    import pyaudio
-    FORMAT = pyaudio.paInt16  # We use 16 bit format per sample
-    CHANNELS = 1
-    RATE = 16000
-    CHUNK = 3200  # 1024 bytes of data read from the buffer
-    RECORD_SECONDS = 0.1
+        if mic_source is None:
+            audio = pyaudio.PyAudio()
+            # Claim the microphone
+            mic_source = audio.open(format=FORMAT,
+                                    channels=CHANNELS,
+                                    rate=RATE,
+                                    input=True)
 
-    audio = pyaudio.PyAudio()
+        # instantiate the speech recognizer with push stream input
+        speech_recognizer = speechsdk.SpeechRecognizer(speech_config=self.speech_config, audio_config=audio_config)
 
+        recognized = False
+        recognized_text = ''
 
-    # setup the audio stream
-    stream = speechsdk.audio.PushAudioInputStream()
-    audio_config = speechsdk.audio.AudioConfig(stream=stream)
+        # Connect callbacks to the events fired by the speech recognizer
+        #speech_recognizer.recognizing.connect(lambda evt: print('RECOGNIZING: {}'.format(evt)))
+        def recognized_handler(evt):
+            nonlocal recognized
+            nonlocal recognized_text
+            print('RECOGNIZED: {}'.format(evt.result.text))
+            recognized = True
+            recognized_text = evt.result.text
 
-    # instantiate the speech recognizer with push stream input
-    speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
+        speech_recognizer.recognized.connect(recognized_handler)
+        speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
+        speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
+        speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
 
-    # Connect callbacks to the events fired by the speech recognizer
-    #speech_recognizer.recognizing.connect(lambda evt: print('RECOGNIZING: {}'.format(evt)))
-    speech_recognizer.recognized.connect(lambda evt: print('RECOGNIZED: {}'.format(evt.result.text)))
-    speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
-    speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
-    speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+        return "test"
 
-    # The number of bytes to push per buffer
-    # n_bytes = 3200
-    # wav_fh = wave.open(weatherfilename)
+        speech_recognizer.start_continuous_recognition()
 
-    # start continuous speech recognition
-    speech_recognizer.start_continuous_recognition()
-
-    # Claim the microphone
-    mic_stream = audio.open(format=FORMAT,
-                            channels=CHANNELS,
-                            rate=RATE,
-                            input=True)
-
-    # start pushing data until all data has been read from the file
-    try:
-        while(True):
-            #frames = wav_fh.readframes(n_bytes // 2)
-            frames = mic_stream.read(CHUNK)
-            if not frames:
-                break
-
-            stream.write(frames)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mic_stream.stop_stream()
-        speech_recognizer.stop_continuous_recognition()
-        stream.close()
-        mic_stream.close()
+        try:
+            while not recognized:
+                frames = mic_source.read(CHUNK)
+                if not frames:
+                    break
+                stream.write(frames)
+            return recognized_text
+        except KeyboardInterrupt:
+            pass
+        finally:
+            if local_mic:
+                mic_source.stop_stream()
+            speech_recognizer.stop_continuous_recognition()
+            stream.close()
 
 
 if __name__ == "__main__":
-    speech_recognition_with_push_stream()
+    speech_to_text = SpeechToText(CONFIGS["stt_key"], CONFIGS["service_region"])
+    speech_to_text.recognize()
