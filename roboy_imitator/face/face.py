@@ -6,6 +6,16 @@ from io import StringIO, BytesIO
 from roboy_imitator.common import CONFIGS
 
 FACE_KEY = CONFIGS["face_key"]
+ROBOY_EMOTIONS = {
+    'anger': 'angry',
+    'happiness': 'smile',
+    'neutral': 'sweat',
+    'sadness': 'speak',
+    'surprise': 'blink',
+    'fear': 'kiss',
+    'contempt': 'blush',
+    'disgust': 'blush',
+}
 
 
 class FaceRecognition(object):
@@ -36,6 +46,10 @@ class FaceRecognition(object):
     def detect_emotions(self):
         return self.face[0]['faceAttributes']['emotion']
 
+    def top_emotion(self):
+        emotions = self.face[0]['faceAttributes']['emotion']
+        return ROBOY_EMOTIONS[max(emotions.keys(), key=lambda k: emotions[k])]
+
     def detect_age(self):
         return self.face[0]['faceAttributes']['age']
 
@@ -60,6 +74,7 @@ if __name__ == "__main__":
             fr.detect_face()
             # print(fr.face)
             print(fr.detect_emotions())
+            print('Top Emotion: ', fr.top_emotion())
 
         if cv2.waitKey(33) == ord('q'):
             break
