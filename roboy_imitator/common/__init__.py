@@ -1,1 +1,1 @@
-from .configs import CONFIGS, VOICES
+from .configs import *

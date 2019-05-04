@@ -1,4 +1,4 @@
-from roboy_imitator.common import CONFIGS, VOICES
+from roboy_imitator.common import CONFIGS, VOICES, EMOTIONS
 from xml.etree import ElementTree
 
 import requests
@@ -52,12 +52,12 @@ class TextToSpeech:
             logging.warning("Something went wrong. Check your subscription key and headers.")
 
 
-def tts_test(subscription_key, teststring, voice_name="Guy"):
-    voice = VOICES[voice_name]
+def tts_test(subscription_key, teststring, emotion="neutral"):
+    voice = VOICES[EMOTIONS[emotion]]
     app = TextToSpeech(subscription_key)
     app.get_token()
     app.save_audio(text_string=teststring, voice=voice)
 
 
 if __name__ == "__main__":
-    tts_test(CONFIGS["tts_key"], "Das ist österreichisch", voice_name="Hedda")
+    tts_test(CONFIGS["tts_key"], "This is a long sentence. I can show emotions.", emotion="happiness")
