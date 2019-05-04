@@ -4,7 +4,8 @@ from roboy_cognition_msgs.msg import RecognizedSpeech
 from roboy_cognition_msgs.srv import RecognizeSpeech
 import speech_recognition as sr
 import threading
-from .recognizer import *
+from roboy_imitator.speech_to_text.recognizer import *
+from roboy_imitator.speech_to_text.mic_client import MicrophoneClient
 from time import sleep
 
 
@@ -67,6 +68,10 @@ def odas_single_channel(node):
 def mic_recognition(node):
     mic = sr.Microphone()
     listener(mic, node)
+
+def client_recognition(node):
+    mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
+    listener(mic_client.stream, node)
 
 def main(args=None):
     rclpy.init()
