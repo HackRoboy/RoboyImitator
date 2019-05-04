@@ -1,7 +1,11 @@
 import os
+import sys
 import cv2
-import requests
+import socket
+import struct
 import logging
+import requests
+import binascii
 from PIL import Image
 from io import StringIO, BytesIO
 from concurrent.futures import ThreadPoolExecutor
@@ -64,6 +68,24 @@ class FaceRecognition(object):
     def detect_gender(self):
         return self.face[0]['faceAttributes']['gender']
 
+    def sending_emotion(self, host, port, emotion):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_address = (host, port)
+        sock.connect(server_address)
+        print('connected to', server_address)
+
+        values = list(ROBOY_EMOTIONS.values()).index(emotion)
+        packer = struct.Struct('I')
+        packed_data = packer.pack(values)
+
+        try:
+            print('sending "%s"' % binascii.hexlify(
+                packed_data), values, file=sys.stderr)
+            sock.sendall(packed_data)
+        finally:
+            print('closing socket', file=sys.stderr)
+            sock.close()
+
 
 def mimic_emotions():
     fr = FaceRecognition(FACE_KEY)
@@ -92,6 +114,7 @@ def mimic_emotions():
             y2 = y1 + int(face["faceRectangle"]["height"])
             logging.info(fr.detect_emotions(face))
             emotion = fr.top_emotion(face)
+            fr.sending_emotion('localhost', 10003, emotion)
             logging.info('Top Emotion: ', emotion)
             try:
                 if pyroboy_flag:
