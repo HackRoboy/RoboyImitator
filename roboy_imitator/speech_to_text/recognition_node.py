@@ -10,17 +10,14 @@ from time import sleep
 
 
 def callback(request, response):
-    global bing, src
-    # msg = RecognizedSpeech()
-    # try:
-    #     msg.source = source.id
-    # except:
-    #     msg.source = -1
+    global bing, src, publisher
+    msg = RecognizedSpeech()
+    msg.source = -1
     try:
         text = bing.recognize(src)
         response.text = text
-        # msg.text = text
-        # publisher.publish(msg)
+        msg.text = text
+        publisher.publish(msg)
         print("text: " + text)
     except sr.UnknownValueError:
         print("Microsoft Bing Voice Recognition could not understand audio")
