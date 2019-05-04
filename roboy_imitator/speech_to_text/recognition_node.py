@@ -65,16 +65,22 @@ def mic_recognition(node):
     listener(mic, node)
 
 
-def client_recognition(node):
+def client_recognition(node, host, port):
     mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
     listener(mic_client, node)
 
 
-def main(args=None):
+def client_recognition(host, port):
+    rclpy.init()
+    node = rclpy.create_node('odas_speech_recognition')
+    client_recognition(node, host, port)
+
+
+def main():
     rclpy.init()
     node = rclpy.create_node('odas_speech_recognition')
     #mic_recognition(node)
-    client_recognition(node) # requires RPi running odas
+    client_recognition(node, "192.168.64.1", 10002) # requires RPi running odas
     #odas_recognition(node)
 
 
