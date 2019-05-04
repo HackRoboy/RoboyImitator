@@ -27,8 +27,7 @@ def listener(source, node):
     publisher = node.create_publisher(RecognizedSpeech,'/roboy/cognition/speech/recognition')
     src = source
     bing = SpeechToText()
-    srv = node.create_service(RecognizeSpeech, \
-        '/roboy/cognition/speech/recognition', callback)
+    srv = node.create_service(RecognizeSpeech, '/roboy/cognition/speech/recognition', callback)
 
     # with source as source:
     while rclpy.ok():
@@ -62,7 +61,7 @@ def mic_recognition(node):
 
 def client_recognition(node):
     mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
-    listener(mic_client.stream, node)
+    listener(mic_client, node)
 
 def main(args=None):
     rclpy.init()

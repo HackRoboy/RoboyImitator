@@ -10,31 +10,13 @@ from monotonic import monotonic
 
 class MicrophoneClient:
 
-    class AudioSource(sr.AudioSource):
-        def __init__(self, id, sample_rate, chunk_size=1024):
-            self.SAMPLE_WIDTH = 2
-            self.SAMPLE_RATE = sample_rate
-            self.CHUNK = chunk_size
-            self.stream = MicrophoneClient.BytesLoop()
-            self.record = False
-            self.id = id
-            self.name = "odas_%i"%self.id
-
-        def __enter__(self):
-            # assert self.stream is None, "This audio source is already inside a context manager"
-            self.record = True
-            return self
-
-        def __exit__(self, exc_type, exc_value, traceback):
-            # self.stream = None
-            self.record = False
-
     def __init__(self, port, host='0.0.0.0', sample_rate=16000, chunk_size=1024):
         # self.format = pyaudio.paInt16
         self.SAMPLE_WIDTH = 2#pyaudio.get_sample_size(self.format)  # size of each sample
         self.SAMPLE_RATE = sample_rate  # sampling rate in Hertz
         self.CHUNK = chunk_size
         self.CHANNELS = 1
+        self.record = False
 
         self.stream = MicrophoneClient.BytesLoop()
 
@@ -46,8 +28,6 @@ class MicrophoneClient:
         self.lock = threading.RLock()
         d.setDaemon(True)
         d.start()
-
-        self.channel = self.AudioSource(id=1, sample_rate=sample_rate, chunk_size=chunk_size)
 
     def write_to_streams(self):
         print("Started mic client deamon")

@@ -54,7 +54,7 @@ class SpeechToText:
         try:
             with mic_source:
                 while not recognized:
-                    frames = mic_source.read(CHUNK)
+                    frames = mic_source.stream.read(CHUNK)
                     if not frames:
                         break
                     stream.write(frames)
