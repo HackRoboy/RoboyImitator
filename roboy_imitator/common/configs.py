@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 import yaml
 
-CONFIGS_PATH = Path(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "configs/secrets.yaml"))
+CONFIGS_PATH = Path(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "configs/secrets.yaml"))
 
 with open(CONFIGS_PATH) as stream:
     CONFIGS = yaml.safe_load(stream)
