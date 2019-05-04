@@ -26,6 +26,30 @@ subscription_key = "Your-Key-Goes-Here"
 # hardcode
 subscription_key = "7d6013e4dabd4877963dbbd830c183b8"
 
+voice_dict = {
+    "Michael": "(de-AT, Micheal)",
+    "Karsten": "(de-CH, Karsten)",
+    "Hedda": "(de-DE, Hedda)",
+    "HeddaRus": "(de-DE, HeddaRUS)",
+    "Stefan": "(de-DE, Stefan, Apollo)",
+    "Catherine": "(en-AU, Catherine)",
+    "Hayley": "(en-AU, HayleyRUS)",
+    "Linda": "(en-CA, Linda)",
+    "Heather": "(en-CA, HeatherRUS)",
+    "Susan": "(en-GB, Susan, Apollo)",
+    "Hazel": "(en-GB, HazelRUS)",
+    "George": "(en-GB, George, Apollo)",
+    "Sean": "(en-IE, Sean)",
+    "Heera": "(en-IN, Heera, Apollo)",
+    "Priya": "(en-IN, PriyaRUS)",
+    "Ravi": "(en-IN, Ravi, Apollo)",
+    "Zira": "(en-US, ZiraRUS)",
+    "Jessa": "(en-US, JessaRUS)",
+    "Benjamin": "(en-US, BenjaminRUS)",
+    "Jessa": "(en-US, Jessa24kRUS)",
+    "Guy": "(en-US, Guy24kRUS)"
+}
+
 class TextToSpeech(object):
     def __init__(self, subscription_key, tts_string):
         self.subscription_key = subscription_key
@@ -79,11 +103,12 @@ class TextToSpeech(object):
         else:
             print("\nStatus code: " + str(response.status_code) + "\nSomething went wrong. Check your subscription key and headers.\n")
 
-def tts_test(subscription_key, teststring):
+def tts_test(subscription_key, teststring, voice_name = "Guy"):
+    voice = voice_dict[voice_name]
     app = TextToSpeech(subscription_key, teststring)
     app.get_token()
-    app.save_audio(voice='(de-AT, Michael)')
+    app.save_audio(voice=voice)
 
 
 if __name__ == "__main__":
-    tts_test(subscription_key, "Das ist österreichisch")
+    tts_test(subscription_key, "Das ist österreichisch", voice_name="Karsten")
