@@ -1,4 +1,5 @@
 from roboy_imitator.common import CONFIGS
+from roboy_imitator.speech_to_text.mic_client import MicrophoneClient
 
 import azure.cognitiveservices.speech as speechsdk
 import pyaudio
@@ -48,8 +49,6 @@ class SpeechToText:
         speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
         speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
 
-        return "test"
-
         speech_recognizer.start_continuous_recognition()
 
         try:
@@ -70,4 +69,5 @@ class SpeechToText:
 
 if __name__ == "__main__":
     speech_to_text = SpeechToText(CONFIGS["stt_key"], CONFIGS["service_region"])
-    speech_to_text.recognize()
+    mic_client = MicrophoneClient(host="192.168.64.1", port=10002, chunk_size=4096)
+    speech_to_text.recognize(mic_client.stream)

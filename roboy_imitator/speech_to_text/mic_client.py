@@ -7,7 +7,7 @@ import io
 import time
 from monotonic import monotonic
 
-class MicrophoneClient():
+class MicrophoneClient:
 
     class AudioSource(sr.AudioSource):
         def __init__(self, id, sample_rate, chunk_size=1024):
