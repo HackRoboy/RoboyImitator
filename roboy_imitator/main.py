@@ -1,7 +1,7 @@
 from roboy_imitator.communication.emotions import receive_emotions
 from threading import Thread
 from multiprocessing import Process
-from roboy_imitator.speech_to_text.recognition_node import client_recognition
+from roboy_imitator.speech_to_text.recognition_node import client_recognition_service
 import pyroboy
 import logging
 import click
@@ -15,7 +15,7 @@ import click
 def main(emotion_host, emotion_port, mic_host, mic_port):
     try:
         # Start the transcription service
-        process = Process(target=client_recognition, args=(mic_host, mic_port))
+        process = Process(target=client_recognition_service, args=(mic_host, mic_port))
         process.start()
 
         # Start the emotion receiving server
