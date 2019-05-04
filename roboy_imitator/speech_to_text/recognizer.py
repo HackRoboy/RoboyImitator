@@ -7,12 +7,12 @@ import yaml
 import sys
 
 
-CONFIGS_PATH = Path("../configs/secrets.yaml")
+CONFIGS_PATH = Path("../../configs/secrets.yaml")
 
 with open(CONFIGS_PATH) as stream:
     CONFIGS = yaml.load(stream)
 
-speech_key, service_region = CONFIGS["speech_key"], CONFIGS["service_region"]
+speech_key, service_region = CONFIGS["stt_key"], CONFIGS["service_region"]
 
 
 def speech_recognition_with_push_stream():
