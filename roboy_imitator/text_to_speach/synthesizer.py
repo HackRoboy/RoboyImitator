@@ -59,7 +59,7 @@ class TextToSpeech:
 
 
 def tts_test(subscription_key, teststring, emotion="neutral"):
-    voice = VOICES[EMOTIONS[emotion]]
+    voice = VOICES[EMOTIONS.get(emotion, "Zira")]
     app = TextToSpeech(subscription_key)
     app.get_token()
     file_path = app.save_audio(text_string=teststring, voice=voice)
@@ -67,4 +67,4 @@ def tts_test(subscription_key, teststring, emotion="neutral"):
 
 
 if __name__ == "__main__":
-    print(tts_test(CONFIGS["tts_key"], "This is a long sentence. I can show emotions.", emotion="happiness"))
+    print(tts_test(CONFIGS["tts_key"], "This is a long sentence. I can't show emotions.", emotion="happines"))
