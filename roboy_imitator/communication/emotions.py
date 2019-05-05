@@ -5,26 +5,23 @@ import struct
 import logging
 
 
-def receive_emotions(host="localhost", port=10000):
+def receive_emotions(host, port):
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (host, port)
-    sock.bind(server_address)
-    sock.listen(1)
-    
-    connection, client_address = sock.accept()
+    sock.connect(server_address)
+    logging.info(f"Connected to {server_address}")
+
     unpacker = struct.Struct("I")
-    logging.info("Waiting for a connection")
-    
+
     try:
         while True:
-            data = connection.recv(unpacker.size)
-            logging.debug(f"Received {data}")
+            data = sock.recv(unpacker.size)
             emotion_ind, = unpacker.unpack(data)
             yield ROBOY_EMOTIONS[list(sorted(ROBOY_EMOTIONS.keys()))[emotion_ind]]
 
     finally:
-        connection.close()
+        sock.close()
 
 
 def send_emotion(socket, emotion):

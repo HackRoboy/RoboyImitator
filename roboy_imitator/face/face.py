@@ -60,7 +60,7 @@ class FaceRecognition(object):
         return self.face[0]['faceAttributes']['gender']
 
 
-def mimic_emotions(send_callback: Optional[Callable[[int], None]]):
+def mimic_emotions(send_callback):
     fr = FaceRecognition(FACE_KEY)
     cap = cv2.VideoCapture(0)
     counter = 0

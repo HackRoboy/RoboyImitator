@@ -6,6 +6,7 @@ import speech_recognition as sr
 import threading
 from roboy_imitator.speech_to_text.recognizer import *
 from roboy_imitator.speech_to_text.mic_client import MicrophoneClient
+import click
 from time import sleep
 
 
@@ -71,16 +72,15 @@ def client_recognition(node, host, port):
     listener(mic_client, node)
 
 
-def client_recognition_service(node, host, port):
-    client_recognition(node, host, port)
-
-
-def main():
+@click.command()
+@click.option('--mic_host', default="192.168.0.215", help='Microphone host which sends recording chunks')
+@click.option('--mic_port', default=10002, help='Microphone port', type=int)
+def main(mic_host, mic_port):
     rclpy.init()
     node = rclpy.create_node('odas_speech_recognition')
-    #mic_recognition(node)
-    client_recognition(node, "192.168.0.215", 10004) # requires RPi running odas
-    #odas_recognition(node)
+    client_recognition(node, mic_host, mic_port) # requires RPi running odas
+    # mic_recognition(node)
+    # odas_recognition(node)
 
 
 if __name__ == '__main__':
