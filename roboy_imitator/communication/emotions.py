@@ -33,3 +33,4 @@ def send_emotion(socket, emotion):
         socket.sendall(packed_data)
     except Exception as e:
         logging.warning(e)
+        raise e
