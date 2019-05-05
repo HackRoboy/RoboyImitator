@@ -18,6 +18,7 @@ def main(host, port):
 
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (host, port)
+    serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     serversocket.bind(server_address)
     serversocket.listen(5)
 
@@ -43,9 +44,15 @@ def main(host, port):
                     read_list.append(clientsocket)
                     logging.info(f"Connection from {address}")
                 else:
-                    data = s.recv(1024)
+                    data = None
+                    try:
+                        data = s.recv(1024)
+                    except:
+                        if s in read_list:
+                            read_list.remove(s)
                     if not data:
-                        read_list.remove(s)
+                        if s in read_list:
+                            read_list.remove(s)
     except KeyboardInterrupt:
         pass
     finally:
