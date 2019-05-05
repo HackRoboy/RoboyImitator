@@ -50,6 +50,6 @@ ROBOY_EMOTIONS = {
     'sadness': 'speak',
     'surprise': 'blink',
     'fear': 'kiss',
-    'contempt': 'blush',
-    'disgust': 'blush',
+    'contempt': 'shy',
+    'disgust': 'shy',
 }
