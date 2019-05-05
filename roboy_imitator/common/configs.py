@@ -45,11 +45,11 @@ EMOTIONS = {
 
 ROBOY_EMOTIONS = {
     'anger': 'angry',
-    'happiness': 'smile',
+    'happiness': 'lucky',
     'neutral': 'sweat',
     'sadness': 'speak',
-    'surprise': 'blink',
-    'fear': 'kiss',
-    'contempt': 'shy',
-    'disgust': 'shy',
+    'surprise': 'surprise',
+    'fear': 'shy',
+    'contempt': 'rolling',
+    'disgust': 'pissed',
 }
